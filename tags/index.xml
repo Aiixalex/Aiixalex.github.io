@@ -2,75 +2,84 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Timer | Responsive Multipurpose Bootstrap Hugo Template</title>
-    <link>http://example.org/tags/</link>
+    <link>https://wylstudio.com/tags/</link>
     <description>Recent content in Tags on Timer | Responsive Multipurpose Bootstrap Hugo Template</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 15 Jul 2018 12:29:40 +0600</lastBuildDate>
+    <lastBuildDate>Thu, 03 Oct 2019 18:57:00 +0800</lastBuildDate>
     
-	<atom:link href="http://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://wylstudio.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>affection</title>
+      <link>https://wylstudio.com/tags/affection/</link>
+      <pubDate>Thu, 03 Oct 2019 18:57:00 +0800</pubDate>
+      
+      <guid>https://wylstudio.com/tags/affection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>inspiration</title>
-      <link>http://example.org/tags/inspiration/</link>
+      <link>https://wylstudio.com/tags/inspiration/</link>
       <pubDate>Sun, 15 Jul 2018 12:29:40 +0600</pubDate>
       
-      <guid>http://example.org/tags/inspiration/</guid>
+      <guid>https://wylstudio.com/tags/inspiration/</guid>
       <description></description>
     </item>
     
     <item>
       <title>motivation</title>
-      <link>http://example.org/tags/motivation/</link>
+      <link>https://wylstudio.com/tags/motivation/</link>
       <pubDate>Sun, 15 Jul 2018 12:29:40 +0600</pubDate>
       
-      <guid>http://example.org/tags/motivation/</guid>
+      <guid>https://wylstudio.com/tags/motivation/</guid>
       <description></description>
     </item>
     
     <item>
       <title>internet</title>
-      <link>http://example.org/tags/internet/</link>
+      <link>https://wylstudio.com/tags/internet/</link>
       <pubDate>Sun, 15 Jul 2018 12:27:38 +0600</pubDate>
       
-      <guid>http://example.org/tags/internet/</guid>
+      <guid>https://wylstudio.com/tags/internet/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tech</title>
-      <link>http://example.org/tags/tech/</link>
+      <link>https://wylstudio.com/tags/tech/</link>
       <pubDate>Sun, 15 Jul 2018 12:27:38 +0600</pubDate>
       
-      <guid>http://example.org/tags/tech/</guid>
+      <guid>https://wylstudio.com/tags/tech/</guid>
       <description></description>
     </item>
     
     <item>
       <title>business</title>
-      <link>http://example.org/tags/business/</link>
+      <link>https://wylstudio.com/tags/business/</link>
       <pubDate>Sun, 15 Jul 2018 12:21:58 +0600</pubDate>
       
-      <guid>http://example.org/tags/business/</guid>
+      <guid>https://wylstudio.com/tags/business/</guid>
       <description></description>
     </item>
     
     <item>
       <title>people</title>
-      <link>http://example.org/tags/people/</link>
+      <link>https://wylstudio.com/tags/people/</link>
       <pubDate>Sun, 15 Jul 2018 12:21:58 +0600</pubDate>
       
-      <guid>http://example.org/tags/people/</guid>
+      <guid>https://wylstudio.com/tags/people/</guid>
       <description></description>
     </item>
     
     <item>
       <title>install</title>
-      <link>http://example.org/tags/install/</link>
+      <link>https://wylstudio.com/tags/install/</link>
       <pubDate>Sun, 08 Jul 2018 12:22:40 +0600</pubDate>
       
-      <guid>http://example.org/tags/install/</guid>
+      <guid>https://wylstudio.com/tags/install/</guid>
       <description></description>
     </item>
     
