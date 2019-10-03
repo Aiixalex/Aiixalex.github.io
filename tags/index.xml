@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Alex Wang&#39;s Awesome Studio</title>
+    <title>Tags on Timer | Responsive Multipurpose Bootstrap Hugo Template</title>
     <link>http://example.org/tags/</link>
-    <description>Recent content in Tags on Alex Wang&#39;s Awesome Studio</description>
+    <description>Recent content in Tags on Timer | Responsive Multipurpose Bootstrap Hugo Template</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 14 May 2019 14:46:10 +0600</lastBuildDate>
+    <lastBuildDate>Sun, 15 Jul 2018 12:29:40 +0600</lastBuildDate>
     
 	<atom:link href="http://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Article</title>
-      <link>http://example.org/tags/article/</link>
-      <pubDate>Tue, 14 May 2019 14:46:10 +0600</pubDate>
+      <title>inspiration</title>
+      <link>http://example.org/tags/inspiration/</link>
+      <pubDate>Sun, 15 Jul 2018 12:29:40 +0600</pubDate>
       
-      <guid>http://example.org/tags/article/</guid>
+      <guid>http://example.org/tags/inspiration/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Fashion</title>
-      <link>http://example.org/tags/fashion/</link>
-      <pubDate>Tue, 14 May 2019 14:46:10 +0600</pubDate>
+      <title>motivation</title>
+      <link>http://example.org/tags/motivation/</link>
+      <pubDate>Sun, 15 Jul 2018 12:29:40 +0600</pubDate>
       
-      <guid>http://example.org/tags/fashion/</guid>
+      <guid>http://example.org/tags/motivation/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Finance</title>
-      <link>http://example.org/tags/finance/</link>
-      <pubDate>Tue, 14 May 2019 14:46:10 +0600</pubDate>
+      <title>internet</title>
+      <link>http://example.org/tags/internet/</link>
+      <pubDate>Sun, 15 Jul 2018 12:27:38 +0600</pubDate>
       
-      <guid>http://example.org/tags/finance/</guid>
+      <guid>http://example.org/tags/internet/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Food</title>
-      <link>http://example.org/tags/food/</link>
-      <pubDate>Tue, 14 May 2019 14:46:10 +0600</pubDate>
+      <title>tech</title>
+      <link>http://example.org/tags/tech/</link>
+      <pubDate>Sun, 15 Jul 2018 12:27:38 +0600</pubDate>
       
-      <guid>http://example.org/tags/food/</guid>
+      <guid>http://example.org/tags/tech/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Nature</title>
-      <link>http://example.org/tags/nature/</link>
-      <pubDate>Tue, 14 May 2019 14:46:10 +0600</pubDate>
+      <title>business</title>
+      <link>http://example.org/tags/business/</link>
+      <pubDate>Sun, 15 Jul 2018 12:21:58 +0600</pubDate>
       
-      <guid>http://example.org/tags/nature/</guid>
+      <guid>http://example.org/tags/business/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Philosophy</title>
-      <link>http://example.org/tags/philosophy/</link>
-      <pubDate>Tue, 14 May 2019 14:46:10 +0600</pubDate>
+      <title>people</title>
+      <link>http://example.org/tags/people/</link>
+      <pubDate>Sun, 15 Jul 2018 12:21:58 +0600</pubDate>
       
-      <guid>http://example.org/tags/philosophy/</guid>
+      <guid>http://example.org/tags/people/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Photos</title>
-      <link>http://example.org/tags/photos/</link>
-      <pubDate>Tue, 14 May 2019 14:46:10 +0600</pubDate>
+      <title>install</title>
+      <link>http://example.org/tags/install/</link>
+      <pubDate>Sun, 08 Jul 2018 12:22:40 +0600</pubDate>
       
-      <guid>http://example.org/tags/photos/</guid>
+      <guid>http://example.org/tags/install/</guid>
       <description></description>
     </item>
     
