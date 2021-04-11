@@ -1,16 +1,690 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>RedClover Studio</title>
+    <title>Studio AIIX</title>
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    <description>RedClover Studio</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2020 Alex Wang</copyright><lastBuildDate>Wed, 12 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <description>Studio AIIX</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2021 Yilin(Alex) Wang</copyright><lastBuildDate>Sat, 10 Apr 2021 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
-      <title>RedClover Studio</title>
+      <url>img/map[gravatar:%!s(bool=false) shape:square]</url>
+      <title>Studio AIIX</title>
       <link>/</link>
     </image>
+    
+    <item>
+      <title>Decaf Compiler</title>
+      <link>/post/decaf_compiler/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      <guid>/post/decaf_compiler/</guid>
+      <description>&lt;p&gt;Compiler of C-like language Decaf.  
+&lt;a href=&#34;https://github.com/Aiixalex/Decaf-Compiler&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;em&gt;&lt;strong&gt;Github Link&lt;/strong&gt;&lt;/em&gt;&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;Here is an example Decaf program:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;extern func print_int(int) void;
+
+package GreatestCommonDivisor {
+    var a int = 10;
+    var b int = 20;
+
+    func main() int {
+        var x, y, z int;
+        x = a;
+        y = b;
+        z = gcd(x, y);
+
+        // print_int is part of the standard input-output library
+        print_int(z);
+    }
+
+    // function that computes the greatest common divisor
+    func gcd(a int, b int) int {
+        if (b == 0) { return(a); }
+        else { return( gcd(b, a % b) ); }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;usage&#34;&gt;Usage&lt;/h2&gt;
+&lt;p&gt;To create the default program, go to the answer directory and type in &lt;code&gt;make default&lt;/code&gt;. To run the default program against the testcases, run the following commands:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ python zipout.py -r default
+$ python check.py
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The output files are saved to the &lt;code&gt;output&lt;/code&gt; directory while all the intermediate LLVM files created for each input Decaf program are saved to the &lt;code&gt;llvm&lt;/code&gt; directory.&lt;/p&gt;
+&lt;p&gt;Directory &lt;code&gt;dev_llvm&lt;/code&gt; contains sample output LLVM assembly for each Decaf program in &lt;code&gt;testcases/dev&lt;/code&gt;. You can check that your output LLVM assembly is roughly doing the right thing by comparing your output to this sample output.&lt;/p&gt;
+&lt;p&gt;Here are several shell scripts that helps streamline parts of the process.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Attempt&lt;/th&gt;
+&lt;th&gt;description&lt;/th&gt;
+&lt;th&gt;args&lt;/th&gt;
+&lt;th&gt;output&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;build.sh&lt;/td&gt;
+&lt;td&gt;Builds the project and runs against testcases in &lt;code&gt;testcases&lt;/code&gt; directory&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;None&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;evaluate.sh&lt;/td&gt;
+&lt;td&gt;Compares all the project&amp;rsquo;s output files in &lt;code&gt;output&lt;/code&gt; directory against the given references in &lt;code&gt;reference&lt;/code&gt; directory to find any failing tests, and where the difference occurs&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;None if all outputs are correct, file name and position of difference if failure occurred&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;result.sh&lt;/td&gt;
+&lt;td&gt;Provides outputs for user to compare their output against the reference output, as well as the used test case&lt;/td&gt;
+&lt;td&gt;1..* (file name without extension)&lt;/td&gt;
+&lt;td&gt;Provides the project&amp;rsquo;s original test case, reference output, and the project&amp;rsquo;s output&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Several use-case examples of the scripts are in &lt;code&gt;README.md&lt;/code&gt; in directory &lt;code&gt;scripts&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;program&#34;&gt;Program&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;makefile&lt;/code&gt;: contains the necessary recipes for building LLVM assembly code, C++ code using LLVM API calls and Lex/Yacc programs that use the LLVM API.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;decaf-stdlib.c&lt;/code&gt;: the Decaf standard library. Contains the extern functions used commonly in Decaf programs.&lt;/li&gt;
+&lt;li&gt;Solution files:
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;default-defs.h&lt;/code&gt;: the common header file among all the default files&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;decafcomp.cc&lt;/code&gt;: classes for LLVM code generation&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;decafcomp.lex&lt;/code&gt;: the lexer for Decaf&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;decafcomp.y&lt;/code&gt;: the yacc program for a small fragment of Decaf which uses &lt;code&gt;decafcomp.cc&lt;/code&gt; for LLVM code generation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;llvm-run&lt;/code&gt;: the Python program used by &lt;code&gt;check.py&lt;/code&gt; in order to run a Decaf program using the following steps. Each step assumes some file names but can be changed using command line options so run &lt;code&gt;llvm-run -h&lt;/code&gt; to see the options and also read the source code of &lt;code&gt;llvm-run&lt;/code&gt; to understand what it is doing.  Stages are:
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;llvm: source code to LLVM code generation using your &lt;code&gt;decafexpr&lt;/code&gt; program&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;bc: assembly to LLVM bitcode&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;s: bitcode to native code&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;exec: linking to make native executable&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;run: running the final executable&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;implemented-grammar&#34;&gt;Implemented Grammar&lt;/h2&gt;
+&lt;h3 id=&#34;lexer&#34;&gt;Lexer&lt;/h3&gt;
+&lt;p&gt;The lexical analyzer produces a stream of tokens for a given Decaf program. The input is taken from &lt;code&gt;stdin&lt;/code&gt; (standard input) and the output token stream is sent to &lt;code&gt;stdout&lt;/code&gt; (standard output). Errors are issued on the &lt;code&gt;stderr&lt;/code&gt; (standard error) stream.&lt;/p&gt;
+&lt;p&gt;The lexical analyzer produces the following token stream:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;T_AND            &amp;amp;&amp;amp;
+T_ASSIGN         =
+T_BOOLTYPE       bool
+T_BREAK          break
+T_CHARCONSTANT   char_lit (see section on Character literals)
+T_COMMA          ,
+T_COMMENT        comment
+T_CONTINUE       continue
+T_DIV            /
+T_DOT            .
+T_ELSE           else
+T_EQ             ==
+T_EXTERN         extern
+T_FALSE          false
+T_FOR            for
+T_FUNC           func
+T_GEQ            &amp;gt;=
+T_GT             &amp;gt;
+T_ID             identifier (see section on Identifiers)
+T_IF             if
+T_INTCONSTANT    int_lit (see section on Integer literals)
+T_INTTYPE        int
+T_LCB            {
+T_LEFTSHIFT      &amp;lt;&amp;lt;
+T_LEQ            &amp;lt;=
+T_LPAREN         (
+T_LSB            [
+T_LT             &amp;lt;
+T_MINUS          -
+T_MOD            %
+T_MULT           *
+T_NEQ            !=
+T_NOT            !
+T_NULL           null
+T_OR             ||
+T_PACKAGE        package
+T_PLUS           +
+T_RCB            }
+T_RETURN         return
+T_RIGHTSHIFT     &amp;gt;&amp;gt;
+T_RPAREN         )
+T_RSB            ]
+T_SEMICOLON      ;
+T_STRINGCONSTANT string_lit (see section on String literals)
+T_STRINGTYPE     string
+T_TRUE           true
+T_VAR            var
+T_VOID           void
+T_WHILE          while
+T_WHITESPACE     whitespace (see section on Whitespace)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;parser&#34;&gt;Parser&lt;/h3&gt;
+&lt;p&gt;The parser of the compiler produces an abstract syntax tree for valid Decaf programs.&lt;/p&gt;
+&lt;p&gt;An abstract syntax tree (AST) is a high-level representation of the program structure without the necessity of containing all the details in the source code; it can be thought of as an abstract representation of the source code.&lt;/p&gt;
+&lt;p&gt;The specification for the abstract syntax tree to be produced by your program is below:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-asdl&#34;&gt;module Decaf
+{
+    prog = Program(extern* extern_list, package body)
+
+    extern = ExternFunction(identifier name, method_type return_type, extern_type* typelist)
+
+    decaf_type = IntType | BoolType
+
+    method_type = VoidType | decaf_type
+
+    extern_type  = VarDef(StringType) | VarDef(decaf_type)
+
+    package = Package(identifier name, field_decl* field_list, method_decl* method_list)
+
+    field_decl = FieldDecl(identifier name, decaf_type type, field_size size)
+        | AssignGlobalVar(identifier name, decaf_type type, constant value)
+
+    field_size = Scalar | Array(int array_size)
+
+    method_decl = Method(identifier name, method_type return_type, typed_symbol* param_list, method_block block)
+
+    typed_symbol = VarDef(identifier name, decaf_type type)
+
+    method_block = MethodBlock(typed_symbol* var_decl_list, statement* statement_list)
+
+    block = Block(typed_symbol* var_decl_list, statement* statement_list)
+
+    statement = assign
+        | method_call
+        | IfStmt(expr condition, block if_block, block? else_block)
+        | WhileStmt(expr condition, block while_block)
+        | ForStmt(assign* pre_assign_list, expr condition, assign* loop_assign_list, block for_block)
+        | ReturnStmt(expr? return_value)
+        | BreakStmt
+        | ContinueStmt
+        | block
+
+    assign = AssignVar(identifier name, expr value)
+        | AssignArrayLoc(identifier name, expr index, expr value)
+
+    method_call = MethodCall(identifier name, method_arg* method_arg_list)
+
+    method_arg = StringConstant(string value)
+        | expr
+
+    expr = rvalue
+        | method_call
+        | constant
+        | BinaryExpr(binary_operator op, expr left_value, expr right_value)
+        | UnaryExpr(unary_operator op, expr value)
+
+    constant = NumberExpr(int value)
+        | BoolExpr(bool value)
+
+    rvalue = VariableExpr(identifier name)
+        | ArrayLocExpr(identifier name, expr index)
+
+    bool = True | False
+
+    binary_operator = Plus | Minus | Mult | Div | Leftshift | Rightshift | Mod | Lt | Gt | Leq | Geq | Eq | Neq | And | Or
+
+    unary_operator = UnaryMinus | Not
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The entire set of rules that describe the &lt;code&gt;Decaf&lt;/code&gt; grammar specification is below:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Program = Externs package identifier &amp;quot;{&amp;quot; FieldDecls MethodDecls &amp;quot;}&amp;quot; .
+Externs    = { ExternDefn } .
+ExternDefn = extern func identifier &amp;quot;(&amp;quot; [ { ExternType }+, ] &amp;quot;)&amp;quot; MethodType &amp;quot;;&amp;quot; .
+FieldDecls = { FieldDecl } .
+FieldDecl  = var { identifier }+, Type &amp;quot;;&amp;quot; .
+FieldDecl  = var { identifier }+, ArrayType &amp;quot;;&amp;quot; .
+FieldDecl  = var identifier Type &amp;quot;=&amp;quot; Constant &amp;quot;;&amp;quot; .
+MethodDecls = { MethodDecl } .
+MethodDecl  = func identifier &amp;quot;(&amp;quot; [ { identifier Type }+, ] &amp;quot;)&amp;quot; MethodType Block .
+Block = &amp;quot;{&amp;quot; VarDecls Statements &amp;quot;}&amp;quot; .
+VarDecls = { VarDecl } .
+VarDecl  = var { identifier }+, Type &amp;quot;;&amp;quot; .
+Statements = { Statement } .
+Statement = Block .
+Statement = Assign &amp;quot;;&amp;quot; .
+Assign    = Lvalue &amp;quot;=&amp;quot; Expr .
+Lvalue    = identifier | identifier &amp;quot;[&amp;quot; Expr &amp;quot;]&amp;quot; .
+Statement  = MethodCall &amp;quot;;&amp;quot; .
+MethodCall = identifier &amp;quot;(&amp;quot; [ { MethodArg }+, ] &amp;quot;)&amp;quot; .
+MethodArg  = Expr | string_lit .
+Statement = if &amp;quot;(&amp;quot; Expr &amp;quot;)&amp;quot; Block [ else Block ] .
+Statement =  while &amp;quot;(&amp;quot; Expr &amp;quot;)&amp;quot; Block .
+Statement = for &amp;quot;(&amp;quot; { Assign }+, &amp;quot;;&amp;quot; Expr &amp;quot;;&amp;quot; { Assign }+, &amp;quot;)&amp;quot; Block .
+Statement = return [ &amp;quot;(&amp;quot; [ Expr ] &amp;quot;)&amp;quot; ] &amp;quot;;&amp;quot; .
+Statement = break &amp;quot;;&amp;quot; .
+Statement = continue &amp;quot;;&amp;quot; .
+Expr = identifier .
+Expr = MethodCall .
+Expr = Constant .
+UnaryOperator = ( UnaryNot | UnaryMinus ) .
+UnaryNot = &amp;quot;!&amp;quot; .
+UnaryMinus = &amp;quot;-&amp;quot; .
+BinaryOperator = ( ArithmeticOperator | BooleanOperator ) .
+ArithmeticOperator = ( &amp;quot;+&amp;quot; | &amp;quot;-&amp;quot; | &amp;quot;*&amp;quot; | &amp;quot;/&amp;quot; | &amp;quot;&amp;lt;&amp;lt;&amp;quot; | &amp;quot;&amp;gt;&amp;gt;&amp;quot; | &amp;quot;%&amp;quot; ) .
+BooleanOperator = ( &amp;quot;==&amp;quot; | &amp;quot;!=&amp;quot; | &amp;quot;&amp;lt;&amp;quot; | &amp;quot;&amp;lt;=&amp;quot; | &amp;quot;&amp;gt;&amp;quot; | &amp;quot;&amp;gt;=&amp;quot; | &amp;quot;&amp;amp;&amp;amp;&amp;quot; | &amp;quot;||&amp;quot; ) .
+Expr = Expr BinaryOperator Expr .
+Expr = UnaryOperator Expr .
+Expr = &amp;quot;(&amp;quot; Expr &amp;quot;)&amp;quot; .
+Expr = identifier &amp;quot;[&amp;quot; Expr &amp;quot;]&amp;quot; .
+ExternType = ( string | Type ) .
+Type = ( int | bool ) .
+MethodType = ( void | Type ) .
+BoolConstant = ( true | false ) .
+ArrayType = &amp;quot;[&amp;quot; int_lit &amp;quot;]&amp;quot; Type .
+Constant = ( int_lit | char_lit | BoolConstant ) .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;code-generation&#34;&gt;Code Generation&lt;/h3&gt;
+&lt;p&gt;Extend the abstract syntax tree (AST) classes to add LLVM API calls for code generation.&lt;/p&gt;
+&lt;h3 id=&#34;others&#34;&gt;Others&lt;/h3&gt;
+&lt;h4 id=&#34;control-flow-and-loops&#34;&gt;Control flow and Loops:&lt;/h4&gt;
+&lt;p&gt;Support for control flow (&lt;code&gt;if&lt;/code&gt; statements) and loops (&lt;code&gt;while&lt;/code&gt; and &lt;code&gt;for&lt;/code&gt; statements) is added, including support for &lt;code&gt;else&lt;/code&gt; blocks as well as &lt;code&gt;break&lt;/code&gt; and &lt;code&gt;continue&lt;/code&gt; statements.&lt;/p&gt;
+&lt;p&gt;To complete control flow and loops, I implemented backpatching using the symbol table to mark the entry, continue and exit points for the control flow and loops.&lt;/p&gt;
+&lt;h4 id=&#34;short-circuit&#34;&gt;Short Circuit&lt;/h4&gt;
+&lt;p&gt;
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Short-circuit_evaluation&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Short-circuit evaluation&lt;/a&gt;
+ for boolean expressions is implemented.&lt;/p&gt;
+&lt;h4 id=&#34;semantics&#34;&gt;Semantics&lt;/h4&gt;
+&lt;p&gt;All the semantic checks listed in the Decaf Semantics section of the 
+&lt;a href=&#34;http://anoopsarkar.github.io/compilers-class/decafspec.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;Decaf spec&lt;/strong&gt;&lt;/a&gt;
+ are implemented.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Multi-threaded Memory Allocator by C</title>
+      <link>/post/memory_allocator/</link>
+      <pubDate>Mon, 29 Mar 2021 00:00:00 +0000</pubDate>
+      <guid>/post/memory_allocator/</guid>
+      <description>&lt;p&gt;
+&lt;a href=&#34;https://github.com/Aiixalex/Multi-Threaded-Memory-Allocator&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;em&gt;&lt;strong&gt;Github Link&lt;/strong&gt;&lt;/em&gt;&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;I implemented a memory allocator which supports allocation, deallocation, compaction and multi-threading by C.&lt;/p&gt;
+&lt;h2 id=&#34;install&#34;&gt;Install&lt;/h2&gt;
+&lt;p&gt;Install the repository.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ make
+$ ./myalloc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;usage&#34;&gt;Usage&lt;/h2&gt;
+&lt;h3 id=&#34;initialization&#34;&gt;Initialization&lt;/h3&gt;
+&lt;p&gt;API:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;void initialize_allocator(int size, enum allocation_algorithm);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The allocator needs to know the total size of the contiguous memory that is assumed for the rest of the program. Any requests for allocation and deallocation requests will be served from this contiguous chunk. The memory chunk is allocated using &lt;code&gt;malloc()&lt;/code&gt; and its content is initialized to 0 using &lt;code&gt;memset&lt;/code&gt;. and the memory allocation algorithm to be used.&lt;/p&gt;
+&lt;p&gt;This memory allocator uses the following memory allocation algorithms:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;FIRST_FIT satisfies the allocation request from the first available memory block (from left) that is at least as large as the requested size.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;BEST_FIT satisfies the allocation request from the available memory block that at least as large as the requested size and that results in the smallest remainder fragment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;WORST_FIT satisfies the allocation request from the available memory block that at least as large as the requested size and that results in the largest remainder fragment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All information of the contiguous memory chunk is represented in &lt;code&gt;struct Myalloc&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;struct Myalloc {
+    enum allocation_algorithm aalgorithm;
+    int size;
+    void* memory;
+    struct nodeStruct *alloc_blocks;
+    struct nodeStruct *free_blocks;
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;alloc_blocks&lt;/code&gt; and &lt;code&gt;free_blocks&lt;/code&gt; are two separate singly linked lists (implemented in &lt;code&gt;list.h&lt;/code&gt; and &lt;code&gt;list.c&lt;/code&gt;) to manage free/allocated space. When a block gets allocated by &lt;code&gt;allocate()&lt;/code&gt;, its metadata must be inserted to the list of allocated blocks. Similarly when a block gets freed by &lt;code&gt;deallocate()&lt;/code&gt;, its metadata must be inserted to the list of free blocks. Note that the free list must never maintain contiguous free blocks.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/1.bmp&#34; alt=&#34;1&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;metadata-management&#34;&gt;Metadata Management&lt;/h3&gt;
+&lt;p&gt;The size of each allocated/freed memory block is stored in header. The header should only contain a single 8-byte word that denotes the size of the actual allocation. For example, if the request asks for 16 bytes of memory, you should actually allocate 8 + 16 bytes, and use the first 8-byte to store the size of the total allocation (24 bytes) and return a pointer to the user-visible 16-byte.&lt;/p&gt;
+&lt;h3 id=&#34;compaction&#34;&gt;Compaction&lt;/h3&gt;
+&lt;p&gt;Compaction is performed by grouping the allocated memory blocks in the beginning of the memory chunk and combining the free memory at the end of the memory chunk.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/2.bmp&#34; alt=&#34;2&#34;&gt;)&lt;/p&gt;
+&lt;p&gt;The compaction API as shown below:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;int compact_allocation(void** _before, void** _after);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The API accepts &lt;code&gt;_before&lt;/code&gt; and &lt;code&gt;_after&lt;/code&gt; arrays of &lt;code&gt;void*&lt;/code&gt; pointers and insert the previous address and new address of each relocated block in &lt;code&gt;_before&lt;/code&gt; and &lt;code&gt;_after&lt;/code&gt;. The return integer is the total number of pointers inserted in the &lt;code&gt;_before&lt;/code&gt; or &lt;code&gt;_after&lt;/code&gt; array.&lt;/p&gt;
+&lt;h3 id=&#34;multi-threading-support&#34;&gt;Multi-threading Support&lt;/h3&gt;
+&lt;p&gt;The allocator uses a simple design that uses a global &lt;code&gt;pthread_mutex&lt;/code&gt; to protect the entire allocator. That is, all the functions must first acquire the mutex before continuing to do its work, and must release the mutex before returning.&lt;/p&gt;
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+&lt;p&gt;The tested code is in &lt;code&gt;main.c&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ ./myalloc
+Using first fit algorithm on memory size 100
+p[0] = 0x7fffeee71268 ; *p[0] = 0
+p[1] = 0x7fffeee71274 ; *p[1] = 1
+p[2] = 0x7fffeee71280 ; *p[2] = 2
+p[3] = 0x7fffeee7128c ; *p[3] = 3
+p[4] = 0x7fffeee71298 ; *p[4] = 4
+p[5] = 0x7fffeee712a4 ; *p[5] = 5
+p[6] = 0x7fffeee712b0 ; *p[6] = 6
+p[7] = 0x7fffeee712bc ; *p[7] = 7
+Allocation failed
+Allocation failed
+Allocated size = 36
+Allocated chunks = 8
+Free size = 0
+Free chunks = 0
+Largest free chunk size = 0
+Smallest free chunk size = 0
+Freeing p[1]
+Freeing p[3]
+Freeing p[5]
+Freeing p[7]
+Freeing p[9]
+Allocated size = 16
+Allocated chunks = 4
+Free size = 20
+Free chunks = 4
+Largest free chunk size = 8
+Smallest free chunk size = 4
+available_memory 20
+Allocated size = 4
+Allocated chunks = 4
+Free size = 44
+Free chunks = 1
+Largest free chunk size = 44
+Smallest free chunk size = 44
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CandyKids</title>
+      <link>/post/candykids/</link>
+      <pubDate>Sun, 07 Mar 2021 00:00:00 +0000</pubDate>
+      <guid>/post/candykids/</guid>
+      <description>&lt;p&gt;
+&lt;a href=&#34;https://github.com/Aiixalex/CandyKids&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;em&gt;&lt;strong&gt;Github Link&lt;/strong&gt;&lt;/em&gt;&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;CandyKids is a program that candy factories generate candy to a bounded buffer while kids eat candy from the bounded buffer.&lt;/p&gt;
+&lt;p&gt;Candykids program uses the producer-consumer solution to manage access to a bounded buffer storing candy. One group of threads will model candy factories which generate candy one at a time and insert the candy into the bounded buffer. Another group of threads will model kids which eat candy one a time from the bounded buffer.&lt;/p&gt;
+&lt;h2 id=&#34;install&#34;&gt;Install&lt;/h2&gt;
+&lt;p&gt;Install the repository.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ make
+$ ./candykids
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;usage&#34;&gt;Usage&lt;/h2&gt;
+&lt;p&gt;Candykids accept three arguments:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;./candykids &amp;lt;#factories&amp;gt; &amp;lt;#kids&amp;gt; &amp;lt;#seconds&amp;gt;
+
+Example:
+$ ./candykids 5 2 8
+# Factories: Number of candy-factory threads to spawn.
+# Kids: Number of kid threads to spawn.
+# Seconds: Number of seconds to allow the factory thread to run for.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;main-function&#34;&gt;Main Function&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Extract arguments: Process the arguments passed on the command line.&lt;/li&gt;
+&lt;li&gt;Initialize modules: Do any module initialization.&lt;/li&gt;
+&lt;li&gt;Launch factory threads: Spawn the requested number of candy-factory threads.&lt;/li&gt;
+&lt;li&gt;Launch kid threads: Spawn the requested number of kid threads.&lt;/li&gt;
+&lt;li&gt;Wait for requested time: Call sleep().&lt;/li&gt;
+&lt;li&gt;Stop factory threads: Indicate to the factory threads that they are to finish, and then call join for each factory thread.&lt;/li&gt;
+&lt;li&gt;Wait until no more candy&lt;/li&gt;
+&lt;li&gt;Stop kid threads: For each kid thread, cancel the thread and then join the thread.&lt;/li&gt;
+&lt;li&gt;Print statistics&lt;/li&gt;
+&lt;li&gt;Cleanup any allocated memory&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;stats&#34;&gt;Stats&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ ./candykids 8 3 7
+Factory 0 ships candy &amp;amp; waits 3s
+Factory 1 ships candy &amp;amp; waits 3s
+Factory 3 ships candy &amp;amp; waits 3s
+Factory 2 ships candy &amp;amp; waits 3s
+Factory 4 ships candy &amp;amp; waits 3s
+Factory 5 ships candy &amp;amp; waits 3s
+Factory 6 ships candy &amp;amp; waits 3s
+Factory 7 ships candy &amp;amp; waits 3s
+Factory 7 ships candy &amp;amp; waits 2s
+Factory 1 ships candy &amp;amp; waits 2s
+Factory 4 ships candy &amp;amp; waits 2s
+Factory 6 ships candy &amp;amp; waits 2s
+Factory 3 ships candy &amp;amp; waits 2s
+Factory 2 ships candy &amp;amp; waits 3s
+Factory 0 ships candy &amp;amp; waits 2s
+Factory 5 ships candy &amp;amp; waits 3s
+Factory 0 ships candy &amp;amp; waits 1s
+Factory 6 ships candy &amp;amp; waits 2s
+Factory 1 ships candy &amp;amp; waits 1s
+Factory 3 ships candy &amp;amp; waits 1s
+Factory 7 ships candy &amp;amp; waits 1s
+Factory 4 ships candy &amp;amp; waits 1s
+Factory 1 ships candy &amp;amp; waits 3s
+Factory 2 ships candy &amp;amp; waits 3s
+Factory 0 ships candy &amp;amp; waits 3s
+Factory 5 ships candy &amp;amp; waits 3s
+Factory 4 ships candy &amp;amp; waits 3s
+Factory 3 ships candy &amp;amp; waits 3s
+Factory 7 ships candy &amp;amp; waits 3s
+Candy-factory 6 done.
+Candy-factory 0 done.
+Candy-factory 5 done.
+Candy-factory 2 done.
+Candy-factory 1 done.
+Candy-factory 7 done.
+Candy-factory 4 done.
+Candy-factory 3 done.
+Statistics:
+Factory#   #Made  #Eaten  Min Delay[ms]  Avg Delay[ms]  Max Delay[ms]
+       0       4       4        0.38086      376.23212      752.57422
+       1       4       4        0.36255        0.81342        1.09497
+       2       3       3        0.33594      501.37191      752.58398
+       3       4       4        0.34790      376.09711      752.59912
+       4       4       4        0.27734      376.06390      752.61938
+       5       3       3        0.23364      501.28548      752.56567
+       6       3       3        0.21777      251.24194      752.60815
+       7       4       4        0.13794      188.12555      750.63379
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>A customized Linux Shell by C</title>
+      <link>/post/linux_shell/</link>
+      <pubDate>Mon, 15 Feb 2021 00:00:00 +0000</pubDate>
+      <guid>/post/linux_shell/</guid>
+      <description>&lt;p&gt;
+&lt;a href=&#34;https://github.com/Aiixalex/Linux-Shell&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;em&gt;&lt;strong&gt;Github Link&lt;/strong&gt;&lt;/em&gt;&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;Linux shell accepts user commands and then executes each command in a separate process. The shell provides the user a prompt at which the next command is entered.&lt;/p&gt;
+&lt;p&gt;One technique for implementing a shell interface is to have the parent process first read what the user enters on the command line and then create a separate child process that performs the command. Unless otherwise specified, the parent process waits for the child to exit before continuing. However, UNIX shells typically also allow the child process to run in the background - or concurrently - as well by specifying the ampersand (&amp;amp;) at the end of the command. The separate child process is created using the &lt;code&gt;fork()&lt;/code&gt; system call and the user&amp;rsquo;s command is executed by using one of the system calls in the &lt;code&gt;exec()&lt;/code&gt; family.&lt;/p&gt;
+&lt;h2 id=&#34;install&#34;&gt;Install&lt;/h2&gt;
+&lt;p&gt;Install the repository.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ make
+$ ./shell
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;usage&#34;&gt;Usage&lt;/h2&gt;
+&lt;h3 id=&#34;basic-shell&#34;&gt;Basic Shell&lt;/h3&gt;
+&lt;p&gt;To implement a shell interface, the parent process first calls &lt;code&gt;read_command()&lt;/code&gt; to reads a full command from the user and tokenizes it into separate arguments. Those tokens can be passed directly to &lt;code&gt;execvp()&lt;/code&gt; in the child process.&lt;/p&gt;
+&lt;p&gt;Unless otherwise specified, the parent process waits for the child to exit before continuing. However, UNIX shells typically also allow the child process to run in the background - or concurrently - as well by specifying the ampersand (&amp;amp;) at the end of the command. In such circumstance, &lt;code&gt;read_command()&lt;/code&gt; will set the &lt;code&gt;in_background&lt;/code&gt; parameter to true&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;main()&lt;/code&gt; function first calls &lt;code&gt;read_command()&lt;/code&gt;, which .  If the user enters an &amp;ldquo;&amp;amp;&amp;rdquo; as the final argument, &lt;code&gt;read_command()&lt;/code&gt; will set the &lt;code&gt;in_background&lt;/code&gt; parameter to true&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;Fork()&lt;/code&gt; a child process&lt;/li&gt;
+&lt;li&gt;Child process invokes &lt;code&gt;execvp()&lt;/code&gt; using results in token array.&lt;/li&gt;
+&lt;li&gt;If in_background is false, parent waits for child to finish. Otherwise, parent loops back to &lt;code&gt;read_command()&lt;/code&gt; again immediately.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;/home/alex_wang_10/repos/Linux-Shell$ ls
+makefile  README.md  shell  shell.c  shell.o
+/home/alex_wang_10/repos/Linux-Shell$
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;/home/alex_wang_10/repos/Linux-Shell$ ls &amp;amp;
+/home/alex_wang_10/repos/Linux-Shell$ makefile  README.md  shell  shell.c  shell.o
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;internal-commands&#34;&gt;Internal Commands&lt;/h3&gt;
+&lt;p&gt;Internal commands are built-in features of the shell itself, as opposed to a separate program that is executed. The commands listed below are implemented.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;exit&lt;/code&gt;: Exit the shell program.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pwd&lt;/code&gt;: Display the current working directory.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd&lt;/code&gt;: Change the current working directory.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;help&lt;/code&gt;: Display help information on internal commands.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;/home/alex_wang_10/repos/Linux-Shell$ cd ~
+/home/alex_wang_10$ cd -
+/home/alex_wang_10/repos/Linux-Shell$ cd 
+/home/alex_wang_10$ cd repos/Linux-Shell
+/home/alex_wang_10/repos/Linux-Shell$
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;history-feature&#34;&gt;History Feature&lt;/h3&gt;
+&lt;p&gt;Shell allows the user access up to 10 most recently entered commands.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Command &amp;ldquo;!n&amp;rdquo; runs command number n.&lt;/li&gt;
+&lt;li&gt;Command &amp;ldquo;!!&amp;rdquo; runs the previous command.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;/home/alex_wang_10/repos$ history
+23        history
+22        touch a.c
+21        echo Hello!
+20        man pthread_create
+19        ls
+18        cd repos
+17        cd
+16        cd ~
+15        cd -
+14        pwd
+/home/alex_wang_10/repos$
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;alex_wang_10@DESKTOP-B47DDOK:~/repos/Linux-Shell$ ./shell
+/home/alex_wang_10/repos/Linux-Shell$ echo Hello!
+Hello!
+/home/alex_wang_10/repos/Linux-Shell$ !!
+echo Hello!
+Hello!
+/home/alex_wang_10/repos/Linux-Shell$ ls
+makefile  README.md  shell  shell.c  shell.o
+/home/alex_wang_10/repos/Linux-Shell$ !2
+ls
+makefile  README.md  shell  shell.c  shell.o
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;signals&#34;&gt;Signals&lt;/h3&gt;
+&lt;p&gt;Change your shell program to display the help information when the user presses ctrl-c (which is the SIGINT signal).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;/home/alex_wang_10/repos/Linux-Shell$ ^C
+A simple Linux Shell, version 1.0.1-release
+These shell commands are defined internally.
+cd [dir]         Change the current working directory.
+exit             Exit the shell program.
+help [command]   Display help information on internal commands.
+pwd              Display the current working directory.
+/home/alex_wang_10/repos/Linux-Shell$
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>LeetCode - Tree - Hard</title>
+      <link>/post/leetcode_tree/</link>
+      <pubDate>Wed, 08 Jul 2020 00:00:00 +0000</pubDate>
+      <guid>/post/leetcode_tree/</guid>
+      <description>&lt;h3 id=&#34;99-recover-binary-search-tree&#34;&gt;99. Recover Binary Search Tree&lt;/h3&gt;
+&lt;h4 id=&#34;problem&#34;&gt;Problem&lt;/h4&gt;
+&lt;p&gt;Two elements of a binary search tree (BST) are swapped by mistake.&lt;/p&gt;
+&lt;p&gt;Recover the tree without changing its structure.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-md&#34;&gt;Input: [3,1,4,null,null,2]
+
+  3
+ / \
+1   4
+   /
+  2
+
+Output: [2,1,4,null,null,3]
+
+  2
+ / \
+1   4
+   /
+  3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;algorithm&#34;&gt;Algorithm&lt;/h4&gt;
+&lt;p&gt;In case of binary search trees (BST), in-order traversal gives nodes in non-decreasing order. Since that exactly two elements of BST are swapped, exactly two elements in the array of in-order traversal is swapped mistakenly.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-md&#34;&gt;[1, 5, 3, 4, 2, 6]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We compare each pair of elements.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In the first abnormal pair of elements, &lt;strong&gt;[5, 3]&lt;/strong&gt;, the previous element is the first swapped element;&lt;/li&gt;
+&lt;li&gt;In the last abnormal pair of elements, &lt;strong&gt;[4, 2]&lt;/strong&gt;,  the latter element is the second swapped element.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;space-complexity&#34;&gt;Space Complexity&lt;/h4&gt;
+&lt;p&gt;This problem can have a constant space solution.&lt;/p&gt;
+&lt;p&gt;The process of in-order traversal does not need space and only the previous TreeNode is recorded.&lt;/p&gt;
+&lt;h4 id=&#34;code&#34;&gt;Code&lt;/h4&gt;
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class Solution {
+public:
+    TreeNode* first = NULL;
+    TreeNode* second = NULL;
+    TreeNode* pre = new TreeNode(INT_MIN);
+    
+    void InOrder(TreeNode* root){
+        if(root == NULL){
+            return;
+        }
+        
+        InOrder(root -&amp;gt; left);
+        
+        if(first == NULL &amp;amp;&amp;amp; root -&amp;gt; val &amp;lt; pre -&amp;gt; val){
+            first = pre;
+        }
+        if(first != NULL &amp;amp;&amp;amp; root -&amp;gt; val &amp;lt; pre -&amp;gt; val){
+            second = root;
+        }
+        pre = root;
+        
+        InOrder(root -&amp;gt; right);
+    }
+    
+    void recoverTree(TreeNode* root) {
+        InOrder(root);
+        swap(first -&amp;gt; val, second -&amp;gt; val);
+    }
+    
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;did-you-find-this-page-helpful-consider-sharing-it-&#34;&gt;Did you find this page helpful? Consider sharing it 🙌&lt;/h3&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Mini Search Engine</title>
+      <link>/post/minisearchengine/</link>
+      <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>/post/minisearchengine/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_01.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_02.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_03.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_04.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_05.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_06.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_07.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_08.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_09.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_10.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_11.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_12.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_13.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_14.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_15.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_16.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_17.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_18.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_19.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_20.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_21.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_22.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_23.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Color Scheme &#39;Violet&#39; for my Home Page</title>
@@ -19,34 +693,32 @@
       <guid>/post/color_scheme/</guid>
       <description>&lt;p&gt;The color scheme &lt;strong&gt;&amp;lsquo;Violet&amp;rsquo;&lt;/strong&gt; for my home page is as follows:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-toml&#34;&gt;# Primary
-primary = &amp;quot;#aa4465&amp;quot;
+primary = &amp;quot;#1c304b&amp;quot;
 
 # Menu
-menu_primary = &amp;quot;#f8f4e3&amp;quot;
-menu_text = &amp;quot;#aa4465&amp;quot;
-menu_text_active = &amp;quot;#c08552&amp;quot;
-menu_title = &amp;quot;#aa4465&amp;quot;
+# menu_primary = &amp;quot;#283044&amp;quot;
+menu_primary = &amp;quot;#ffffff&amp;quot;
+menu_text = &amp;quot;#1c304b&amp;quot;
+menu_text_active = &amp;quot;#bf3078&amp;quot;
+menu_title = &amp;quot;#832554&amp;quot;
 
 # Home sections
-background = &amp;quot;#f8f4e3&amp;quot;
-home_section_odd = &amp;quot;#f8f4e3&amp;quot;
-home_section_even = &amp;quot;#edf0da&amp;quot;
+background = &amp;quot;#ffffff&amp;quot;
+home_section_odd = &amp;quot;#ffffff&amp;quot;
+# home_section_even = &amp;quot;#f0dfad&amp;quot;
+# home_section_even = &amp;quot;#edf0da&amp;quot;
+home_section_even = &amp;quot;#f5f9fe&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It briefly disappointed me when I found that all of the default themes for &amp;lsquo;hugo academic&amp;rsquo; did not comfort my eyes well, then I decided to design my own theme.&lt;/p&gt;
-&lt;p&gt;The inspiration for this color scheme partly came from 
-&lt;a href=&#34;https://coolors.co/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://coolors.co/&lt;/a&gt;
-, during which I hit my space bar for hundreds of times🙌🙌🙌&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Leetcode - 5. Longest Palindromic Substring and Manacher&#39;s Algorothm</title>
-      <link>/post/leetcode_5/</link>
+      <title>Manacher&#39;s Algorithm</title>
+      <link>/post/manachers-algorithm/</link>
       <pubDate>Wed, 12 Feb 2020 00:00:00 +0000</pubDate>
-      <guid>/post/leetcode_5/</guid>
+      <guid>/post/manachers-algorithm/</guid>
       <description>&lt;p&gt;The 5th problem of Leetcode, &lt;strong&gt;Longest Palindromic Substring&lt;/strong&gt;, is the first problem in the set of problems about dynamic programming.&lt;/p&gt;
 &lt;p&gt;In the process of completing and looking through the community, I would like to share a really interesting algorithm named &lt;strong&gt;Manacher&amp;rsquo;s algorithm&lt;/strong&gt; as well as the basic solution by dynamic programming.&lt;/p&gt;
-&lt;p&gt;On this page, you&amp;rsquo;ll find some examples of the types of technical content that can be rendered with Academic.&lt;/p&gt;
 &lt;h2 id=&#34;problem&#34;&gt;Problem&lt;/h2&gt;
 &lt;p&gt;Given a string &lt;strong&gt;s&lt;/strong&gt;, find the longest palindromic substring in &lt;strong&gt;s&lt;/strong&gt;. You may assume that the maximum length of &lt;strong&gt;s&lt;/strong&gt; is 1000.&lt;/p&gt;
 &lt;p&gt;Example:&lt;/p&gt;

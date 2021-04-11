@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Authors | RedClover Studio</title>
+    <title>Authors | Studio AIIX</title>
     <link>/authors/</link>
       <atom:link href="/authors/index.xml" rel="self" type="application/rss+xml" />
     <description>Authors</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2020 Alex Wang</copyright><lastBuildDate>Wed, 12 Feb 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2021 Yilin(Alex) Wang</copyright><lastBuildDate>Sat, 10 Apr 2021 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <url>img/map[gravatar:%!s(bool=false) shape:square]</url>
       <title>Authors</title>
       <link>/authors/</link>
     </image>
@@ -15,10 +15,16 @@
     <item>
       <title></title>
       <link>/authors/admin/</link>
-      <pubDate>Wed, 12 Feb 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
       <guid>/authors/admin/</guid>
-      <description>&lt;p&gt;Morphling is a ranged agility hero that has many flexible abilities, item builds and is leveled as a very strong hard carry. He relies strongly on his attributes, and is an effective ganker. Unlike other agility carries that rely on physical attacks, he relies on his powerful abilities to initiate and shift into a state from which he can make a kill.&lt;/p&gt;
-&lt;p&gt;Waveform lets him surge directly forward to a location, damaging enemies on his path, working both as a nuke or an escape. Adaptive Strike is a scaling two-part ability that blasts enemies with a jet of water, either stunning and knocking back or dealing damage.  (never mind🙌🙌🙌🙌🙌🙌)&lt;/p&gt;
+      <description>&lt;p&gt;- 👶 Born in June, 2000&lt;br&gt;
+- 🏫 Currently Studying Computer Science at SFU&lt;br&gt;
+- 🎼 Piano Enthusiast&lt;br&gt;
+- 📷 A Beginner Photographer&lt;br&gt;
+- 💙 Dota2, Board Game, Basketball&lt;br&gt;
+- 💽 Favorite Album: 木马《果冻帝国》&lt;br&gt;
+- 🎲 Favorite Board Game: The Resistance: Avalon&lt;br&gt;
+- 🏆 Favorite Sports Teams: PSG.LGD, 🍀 Boston Celtics&lt;/p&gt;
 </description>
     </item>
     

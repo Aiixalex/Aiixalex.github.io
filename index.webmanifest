@@ -1,9 +1,9 @@
 {
-  "name": "RedClover Studio",
-  "short_name": "RedClover Studio",
+  "name": "Studio AIIX",
+  "short_name": "Studio AIIX",
   "lang": "en-us",
-  "theme_color": "#aa4465",
-  "background_color": "#aa4465",
+  "theme_color": "#1c304b",
+  "background_color": "#1c304b",
   "icons": [{
     "src": "/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_192x192_fill_lanczos_center_2.png",
     "sizes": "192x192",
