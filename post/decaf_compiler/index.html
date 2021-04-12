@@ -635,21 +635,21 @@ $ python check.py
 <tbody>
 <tr>
 <td>build.sh</td>
-<td>Builds the project and runs against testcases in <code>testcases</code> directory</td>
+<td>Builds the project and runs against testcases in <code>testcases</code> directory.</td>
 <td>0</td>
 <td>None</td>
 </tr>
 <tr>
 <td>evaluate.sh</td>
-<td>Compares all the project&rsquo;s output files in <code>output</code> directory against the given references in <code>reference</code> directory to find any failing tests, and where the difference occurs</td>
+<td>Compares all the project&rsquo;s output files in <code>output</code> directory against the given references in <code>reference</code> directory to find any failing tests, and where the difference occurs.</td>
 <td>0</td>
-<td>None if all outputs are correct, file name and position of difference if failure occurred</td>
+<td>None if all outputs are correct, file name and position of difference if failure occurred.</td>
 </tr>
 <tr>
 <td>result.sh</td>
-<td>Provides outputs for user to compare their output against the reference output, as well as the used test case</td>
-<td>1..* (file name without extension)</td>
-<td>Provides the project&rsquo;s original test case, reference output, and the project&rsquo;s output</td>
+<td>Provides outputs for user to compare their output against the reference output, as well as the used test case.</td>
+<td>file names without extension</td>
+<td>Provides the project&rsquo;s original test case, reference output, and the project&rsquo;s output.</td>
 </tr>
 </tbody>
 </table>
@@ -668,21 +668,11 @@ $ python check.py
 </li>
 <li><code>llvm-run</code>: the Python program used by <code>check.py</code> in order to run a Decaf program using the following steps. Each step assumes some file names but can be changed using command line options so run <code>llvm-run -h</code> to see the options and also read the source code of <code>llvm-run</code> to understand what it is doing.  Stages are:
 <ul>
-<li>
-<p>llvm: source code to LLVM code generation using your <code>decafexpr</code> program</p>
-</li>
-<li>
-<p>bc: assembly to LLVM bitcode</p>
-</li>
-<li>
-<p>s: bitcode to native code</p>
-</li>
-<li>
-<p>exec: linking to make native executable</p>
-</li>
-<li>
-<p>run: running the final executable</p>
-</li>
+<li>llvm: source code to LLVM code generation</li>
+<li>bc: assembly to LLVM bitcode</li>
+<li>s: bitcode to native code</li>
+<li>exec: linking to make native executable</li>
+<li>run: running the final executable</li>
 </ul>
 </li>
 </ul>
