@@ -1,33 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Authors | Studio AIIX</title>
+    <title>Authors | Yilin&#39;s Blog</title>
     <link>/authors/</link>
       <atom:link href="/authors/index.xml" rel="self" type="application/rss+xml" />
     <description>Authors</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2021 Yilin(Alex) Wang</copyright><lastBuildDate>Sat, 10 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2023 Yilin(Alex) Wang</copyright><lastBuildDate>Mon, 21 Nov 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:square]</url>
       <title>Authors</title>
       <link>/authors/</link>
     </image>
-    
-    <item>
-      <title></title>
-      <link>/authors/admin/</link>
-      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
-      <guid>/authors/admin/</guid>
-      <description>&lt;p&gt;- 👶 Born in June, 2000&lt;br&gt;
-- 🏫 Currently Studying Computer Science at SFU&lt;br&gt;
-- 🎼 Piano Enthusiast&lt;br&gt;
-- 📷 A Beginner Photographer&lt;br&gt;
-- 💙 Dota2, Board Game, Basketball&lt;br&gt;
-- 💽 Favorite Album: 木马《果冻帝国》&lt;br&gt;
-- 🎲 Favorite Board Game: The Resistance: Avalon&lt;br&gt;
-- 🏆 Favorite Sports Teams: PSG.LGD, Boston Celtics&lt;br&gt;
-- 👽 One speechless fact: A friend who did not want to be named said that my portrait photo was taken according to this alien expression.&lt;/p&gt;
-</description>
-    </item>
     
   </channel>
 </rss>

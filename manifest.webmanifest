@@ -1,15 +1,15 @@
 {
-  "name": "Studio AIIX",
-  "short_name": "Studio AIIX",
+  "name": "Yilin's Blog",
+  "short_name": "Yilin's Blog",
   "lang": "en-us",
   "theme_color": "#1c304b",
   "background_color": "#1c304b",
   "icons": [{
-    "src": "/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_192x192_fill_lanczos_center_2.png",
+    "src": "/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_192x192_fill_lanczos_center_3.png",
     "sizes": "192x192",
     "type": "image/png"
     }, {
-    "src": "/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_512x512_fill_lanczos_center_2.png",
+    "src": "/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_512x512_fill_lanczos_center_3.png",
     "sizes": "512x512",
     "type": "image/png"
      }],

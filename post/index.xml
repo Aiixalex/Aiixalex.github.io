@@ -1,16 +1,121 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts | Studio AIIX</title>
+    <title>Posts | Yilin&#39;s Blog</title>
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2021 Yilin(Alex) Wang</copyright><lastBuildDate>Sat, 10 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2023 Yilin(Alex) Wang</copyright><lastBuildDate>Mon, 21 Nov 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:square]</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>Reading Source Code of Malloc in the GNU C Library</title>
+      <link>/post/malloc/</link>
+      <pubDate>Mon, 21 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>/post/malloc/</guid>
+      <description>&lt;h3 id=&#34;dynamically-memory-allocation-algorithm&#34;&gt;Dynamically Memory Allocation Algorithm&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For large (&amp;gt;= 512 bytes) requests, it is a pure best-fit allocator, with ties normally decided via FIFO (i.e. least recently used).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For small (&amp;lt;= 64 bytes by default) requests, it is a caching allocator, that maintains pools of quickly recycled chunks.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;In between, and for combinations of large and small requests, it does the best it can trying to meet both goals at once.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;For very large requests (&amp;gt;= 128KB by default), it relies on system memory mapping facilities, if supported.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;vital-statistics&#34;&gt;Vital Statistics&lt;/h3&gt;
+&lt;h4 id=&#34;size-of-ptr-and-size_t&#34;&gt;size of ptr and size_t&lt;/h4&gt;
+&lt;p&gt;4 bytes (32-bit program) or 8 bytes (64-bit program)&lt;/p&gt;
+&lt;h4 id=&#34;memory-alignment&#34;&gt;Memory Alignment&lt;/h4&gt;
+&lt;p&gt;2 * sizeof(size_t)&lt;/p&gt;
+&lt;p&gt;i.e. 8 or 16 bytes&lt;/p&gt;
+&lt;h4 id=&#34;minimum-overhead&#34;&gt;Minimum Overhead&lt;/h4&gt;
+&lt;p&gt;4 or 8 bytes per allocated chunk&lt;/p&gt;
+&lt;p&gt;Each malloced chunk has a hidden word of overhead holding size and status information.&lt;/p&gt;
+&lt;h3 id=&#34;chunk&#34;&gt;Chunk&lt;/h3&gt;
+&lt;p&gt;An allocated chunk looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    chunk-&amp;gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of previous chunk, if unallocated (P clear)  |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of chunk, in bytes                     |A|M|P|
+      mem-&amp;gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             User data starts here...                          .
+            .                                                               .
+            .             (malloc_usable_size() bytes)                      .
+            .                                                               |
+nextchunk-&amp;gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             (size of chunk, but used for application data)    |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of next chunk, in bytes                |A|0|1|
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Free chunks are stored in circular doubly-linked lists, and look like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    chunk-&amp;gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of previous chunk, if unallocated (P clear)  |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    `head:&#39; |             Size of chunk, in bytes                     |A|0|P|
+      mem-&amp;gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Forward pointer to next chunk in list             |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Back pointer to previous chunk in list            |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Unused space (may be 0 bytes long)                .
+            .                                                               .
+            .                                                               |
+nextchunk-&amp;gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    `foot:&#39; |             Size of chunk, in bytes                           |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of next chunk, in bytes                |A|0|0|
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;bin&#34;&gt;Bin&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;An array of bin headers for free chunks. Each bin is doubly linked.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Chunks in bins are kept in size order, with ties going to the approximately least recently used chunk.&lt;/p&gt;
+&lt;h3 id=&#34;fastbin&#34;&gt;Fastbin&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;An array of lists holding recently freed small chunks.&lt;/strong&gt;  Fastbins are not doubly linked.  It is faster to single-link them, and since chunks are never removed from the middles of these lists, double linking is not necessary. Also, unlike regular bins, they are not even processed in FIFO order (they use faster LIFO) since ordering doesn&amp;rsquo;t much matter in the transient contexts in which fastbins are normally used.&lt;/p&gt;
+&lt;p&gt;Chunks in fastbins keep their inuse bit set, so they cannot be consolidated with other free chunks. malloc_consolidate releases all chunks in fastbins and consolidates them with other free chunks.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Mini Search Engine</title>
+      <link>/post/minisearchengine/</link>
+      <pubDate>Wed, 16 Jun 2021 00:00:00 +0000</pubDate>
+      <guid>/post/minisearchengine/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;1.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;2.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;3.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;4.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;5.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;6.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;7.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;8.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;9.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;10.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;11.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;12.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;13.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;14.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;15.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;16.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;17.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;18.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;19.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;20.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;21.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;22.bmp&#34; alt=&#34;img&#34;&gt;
+&lt;img src=&#34;23.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Decaf Compiler</title>
@@ -646,37 +751,6 @@ public:
     </item>
     
     <item>
-      <title>Mini Search Engine</title>
-      <link>/post/minisearchengine/</link>
-      <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
-      <guid>/post/minisearchengine/</guid>
-      <description>&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_01.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_02.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_03.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_04.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_05.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_06.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_07.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_08.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_09.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_10.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_11.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_12.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_13.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_14.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_15.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_16.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_17.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_18.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_19.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_20.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_21.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_22.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://mystudio-1304603642.cos.ap-nanjing.myqcloud.com/img/MiniSearchEngine_23.bmp&#34; alt=&#34;img&#34;&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Color Scheme &#39;Violet&#39; for my Home Page</title>
       <link>/post/color_scheme/</link>
       <pubDate>Wed, 12 Feb 2020 00:00:00 +0000</pubDate>
@@ -768,7 +842,7 @@ public:
 &lt;h2 id=&#34;manachers-algorithm&#34;&gt;Manacher&amp;rsquo;s Algorithm&lt;/h2&gt;
 &lt;h3 id=&#34;algorithm-1&#34;&gt;Algorithm&lt;/h3&gt;
 &lt;p&gt;Firstly, we put aside even palindromes and focus on odd palindromes.&lt;/p&gt;
-&lt;p&gt;Every palindrome has a center and a right boundary, and a distance between center and right boundary, which was described as the &amp;lsquo;expansion length&amp;rsquo; of a palindrome. In this algorithm, we create an array &lt;strong&gt;P[i]&lt;/strong&gt; to record the expansion length of an i-centered palindrome, and let Integer &lt;strong&gt;c&lt;/strong&gt; and &lt;strong&gt;r&lt;/strong&gt; to present the index of center and right boundary.&lt;/p&gt;
+&lt;p&gt;Every palindrome has a center and a right boundary, and a distance between center and right boundary, which was described as the &amp;rsquo;expansion length&amp;rsquo; of a palindrome. In this algorithm, we create an array &lt;strong&gt;P[i]&lt;/strong&gt; to record the expansion length of an i-centered palindrome, and let Integer &lt;strong&gt;c&lt;/strong&gt; and &lt;strong&gt;r&lt;/strong&gt; to present the index of center and right boundary.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Eg: “abacabacabb”&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;When going from left to right, when i is at index 3, the longest palindromic substring is “abacaba”, P[3] = 3.&lt;/p&gt;
 &lt;p&gt;Normally, we have to traverse from P[1] to P[string.length()-2], but we don’t need to manually go to each index and expand to check the expansion length every time. This is exactly where Manacher’s algorithm optimizes better than brute force, by using some insights on how palindromes work. Let’s see how the optimization is done.&lt;/p&gt;

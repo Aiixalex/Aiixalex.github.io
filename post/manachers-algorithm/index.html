@@ -75,8 +75,6 @@ Problem Given a string s, find the longest palindromic substring in s. You may a
     
 
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
-    
 
     
 
@@ -217,8 +215,8 @@ Problem Given a string s, find the longest palindromic substring in s. You may a
   
 
   <link rel="manifest" href="/index.webmanifest">
-  <link rel="icon" type="image/png" href="/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_32x32_fill_lanczos_center_2.png">
-  <link rel="apple-touch-icon" type="image/png" href="/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_192x192_fill_lanczos_center_2.png">
+  <link rel="icon" type="image/png" href="/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_32x32_fill_lanczos_center_3.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_192x192_fill_lanczos_center_3.png">
 
   <link rel="canonical" href="/post/manachers-algorithm/">
 
@@ -236,9 +234,9 @@ Problem Given a string s, find the longest palindromic substring in s. You may a
   <meta property="twitter:site" content="@Aiixalex">
   <meta property="twitter:creator" content="@Aiixalex">
   
-  <meta property="og:site_name" content="Studio AIIX">
+  <meta property="og:site_name" content="Yilin&#39;s Blog">
   <meta property="og:url" content="/post/manachers-algorithm/">
-  <meta property="og:title" content="Manacher&#39;s Algorithm | Studio AIIX">
+  <meta property="og:title" content="Manacher&#39;s Algorithm | Yilin&#39;s Blog">
   <meta property="og:description" content="The 5th problem of Leetcode, Longest Palindromic Substring, is the first problem in the set of problems about dynamic programming.
 In the process of completing and looking through the community, I would like to share a really interesting algorithm named Manacher&rsquo;s algorithm as well as the basic solution by dynamic programming.
 Problem Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000."><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:square]">
@@ -287,7 +285,7 @@ Problem Given a string s, find the longest palindromic substring in s. You may a
   
   "publisher": {
     "@type": "Organization",
-    "name": "Studio AIIX",
+    "name": "Yilin's Blog",
     "logo": {
       "@type": "ImageObject",
       "url": "img//"
@@ -311,7 +309,7 @@ Problem Given a string s, find the longest palindromic substring in s. You may a
 
 
 
-  <title>Manacher&#39;s Algorithm | Studio AIIX</title>
+  <title>Manacher&#39;s Algorithm | Yilin&#39;s Blog</title>
 
 </head>
 
@@ -362,7 +360,7 @@ Problem Given a string s, find the longest palindromic substring in s. You may a
 
     
     <div class="d-none d-lg-inline-flex">
-      <a class="navbar-brand" href="/">Studio AIIX</a>
+      <a class="navbar-brand" href="/">Yilin&#39;s Blog</a>
     </div>
     
 
@@ -375,7 +373,7 @@ Problem Given a string s, find the longest palindromic substring in s. You may a
 
     
     <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
-      <a class="navbar-brand" href="/">Studio AIIX</a>
+      <a class="navbar-brand" href="/">Yilin&#39;s Blog</a>
     </div>
     
 
@@ -439,7 +437,7 @@ Problem Given a string s, find the longest palindromic substring in s. You may a
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#posts"><span>Blog</span></a>
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
         </li>
 
         
@@ -651,7 +649,7 @@ public:
 <h2 id="manachers-algorithm">Manacher&rsquo;s Algorithm</h2>
 <h3 id="algorithm-1">Algorithm</h3>
 <p>Firstly, we put aside even palindromes and focus on odd palindromes.</p>
-<p>Every palindrome has a center and a right boundary, and a distance between center and right boundary, which was described as the &lsquo;expansion length&rsquo; of a palindrome. In this algorithm, we create an array <strong>P[i]</strong> to record the expansion length of an i-centered palindrome, and let Integer <strong>c</strong> and <strong>r</strong> to present the index of center and right boundary.</p>
+<p>Every palindrome has a center and a right boundary, and a distance between center and right boundary, which was described as the &rsquo;expansion length&rsquo; of a palindrome. In this algorithm, we create an array <strong>P[i]</strong> to record the expansion length of an i-centered palindrome, and let Integer <strong>c</strong> and <strong>r</strong> to present the index of center and right boundary.</p>
 <p><strong>Eg: “abacabacabb”</strong></p>
 <p>When going from left to right, when i is at index 3, the longest palindromic substring is “abacaba”, P[3] = 3.</p>
 <p>Normally, we have to traverse from P[1] to P[string.length()-2], but we don’t need to manually go to each index and expand to check the expansion length every time. This is exactly where Manacher’s algorithm optimizes better than brute force, by using some insights on how palindromes work. Let’s see how the optimization is done.</p>
@@ -851,8 +849,8 @@ public:
 
     <div class="media-body">
       <h5 class="card-title"><a href="/">Yilin(Alex) Wang</a></h5>
-      <h6 class="card-subtitle">Undergraduate majoring in Computer Science</h6>
-      <p class="card-text">the 3rd movement of Sonata.</p>
+      <h6 class="card-subtitle">BUG CREATOR</h6>
+      <p class="card-text">Piano/Tennis/Dota is Life.</p>
       <ul class="network-icon" aria-hidden="true">
   
     
@@ -865,7 +863,7 @@ public:
     
     
     <li>
-      <a href="mailto:wyl2000@zju.edu.cn" >
+      <a href="mailto:redcloveralex@gmail.com" >
         <i class="fas fa-envelope"></i>
       </a>
     </li>
@@ -899,7 +897,7 @@ public:
       
     
     <li>
-      <a href="https://www.instagram.com/aiixalex/" target="_blank" rel="noopener">
+      <a href="https://www.instagram.com/wang_yilin10/" target="_blank" rel="noopener">
         <i class="fab fa-instagram"></i>
       </a>
     </li>
@@ -966,8 +964,6 @@ public:
     
 
     
-    
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
     
 
     
@@ -1037,7 +1033,7 @@ public:
     
     
     
-    <script src="/js/academic.min.0630fec5958cb075a5a38f042b3ddde6.js"></script>
+    <script src="/js/academic.min.ebdecbafb24a1afacd6150c2056d315f.js"></script>
 
     
 
@@ -1053,7 +1049,7 @@ public:
   
 
   <p class="powered-by">
-    © 2021 Yilin(Alex) Wang
+    © 2023 Yilin(Alex) Wang
     
     
 

@@ -28,10 +28,13 @@
   
     
   
-  <meta name="description" content=" ">
+  <meta name="description" content="Dynamically Memory Allocation Algorithm For large (&gt;= 512 bytes) requests, it is a pure best-fit allocator, with ties normally decided via FIFO (i.e. least recently used).
+For small (&lt;= 64 bytes by default) requests, it is a caching allocator, that maintains pools of quickly recycled chunks.
+In between, and for combinations of large and small requests, it does the best it can trying to meet both goals at once.
+For very large requests (&gt;= 128KB by default), it relies on system memory mapping facilities, if supported.">
 
   
-  <link rel="alternate" hreflang="en-us" href="/post/minisearchengine/">
+  <link rel="alternate" hreflang="en-us" href="/post/malloc/">
 
   
 
@@ -216,7 +219,7 @@
   <link rel="icon" type="image/png" href="/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_32x32_fill_lanczos_center_3.png">
   <link rel="apple-touch-icon" type="image/png" href="/images/icon_huf793c9dfb803421b4b8a7af1a4c9d1f6_1291_192x192_fill_lanczos_center_3.png">
 
-  <link rel="canonical" href="/post/minisearchengine/">
+  <link rel="canonical" href="/post/malloc/">
 
   
   
@@ -233,15 +236,18 @@
   <meta property="twitter:creator" content="@Aiixalex">
   
   <meta property="og:site_name" content="Yilin&#39;s Blog">
-  <meta property="og:url" content="/post/minisearchengine/">
-  <meta property="og:title" content="Mini Search Engine | Yilin&#39;s Blog">
-  <meta property="og:description" content=" "><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:square]">
+  <meta property="og:url" content="/post/malloc/">
+  <meta property="og:title" content="Reading Source Code of Malloc in the GNU C Library | Yilin&#39;s Blog">
+  <meta property="og:description" content="Dynamically Memory Allocation Algorithm For large (&gt;= 512 bytes) requests, it is a pure best-fit allocator, with ties normally decided via FIFO (i.e. least recently used).
+For small (&lt;= 64 bytes by default) requests, it is a caching allocator, that maintains pools of quickly recycled chunks.
+In between, and for combinations of large and small requests, it does the best it can trying to meet both goals at once.
+For very large requests (&gt;= 128KB by default), it relies on system memory mapping facilities, if supported."><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:square]">
   <meta property="twitter:image" content="img/map[gravatar:%!s(bool=false) shape:square]"><meta property="og:locale" content="en-us">
   
     
-      <meta property="article:published_time" content="2021-06-16T00:00:00&#43;00:00">
+      <meta property="article:published_time" content="2022-11-21T00:00:00&#43;00:00">
     
-    <meta property="article:modified_time" content="2021-06-16T00:00:00&#43;00:00">
+    <meta property="article:modified_time" content="2022-11-21T00:00:00&#43;00:00">
   
 
   
@@ -267,12 +273,12 @@
   "@type": "BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "/post/minisearchengine/"
+    "@id": "/post/malloc/"
   },
-  "headline": "Mini Search Engine",
+  "headline": "Reading Source Code of Malloc in the GNU C Library",
   
-  "datePublished": "2021-06-16T00:00:00Z",
-  "dateModified": "2021-06-16T00:00:00Z",
+  "datePublished": "2022-11-21T00:00:00Z",
+  "dateModified": "2022-11-21T00:00:00Z",
   
   "author": {
     "@type": "Person",
@@ -287,7 +293,7 @@
       "url": "img//"
     }
   },
-  "description": " "
+  "description": "Dynamically Memory Allocation Algorithm For large (\u0026gt;= 512 bytes) requests, it is a pure best-fit allocator, with ties normally decided via FIFO (i.e. least recently used).\nFor small (\u0026lt;= 64 bytes by default) requests, it is a caching allocator, that maintains pools of quickly recycled chunks.\nIn between, and for combinations of large and small requests, it does the best it can trying to meet both goals at once.\nFor very large requests (\u0026gt;= 128KB by default), it relies on system memory mapping facilities, if supported."
 }
 </script>
 
@@ -305,7 +311,7 @@
 
 
 
-  <title>Mini Search Engine | Yilin&#39;s Blog</title>
+  <title>Reading Source Code of Malloc in the GNU C Library | Yilin&#39;s Blog</title>
 
 </head>
 
@@ -512,7 +518,7 @@
   
   
 <div class="article-container pt-3">
-  <h1>Mini Search Engine</h1>
+  <h1>Reading Source Code of Malloc in the GNU C Library</h1>
 
   
 
@@ -544,7 +550,7 @@
     
       
     
-    Jun 16, 2021
+    Nov 21, 2022
   </span>
   
 
@@ -584,29 +590,72 @@
   <div class="article-container">
 
     <div class="article-style">
-      <p><img src="1.bmp" alt="img">
-<img src="2.bmp" alt="img">
-<img src="3.bmp" alt="img">
-<img src="4.bmp" alt="img">
-<img src="5.bmp" alt="img">
-<img src="6.bmp" alt="img">
-<img src="7.bmp" alt="img">
-<img src="8.bmp" alt="img">
-<img src="9.bmp" alt="img">
-<img src="10.bmp" alt="img">
-<img src="11.bmp" alt="img">
-<img src="12.bmp" alt="img">
-<img src="13.bmp" alt="img">
-<img src="14.bmp" alt="img">
-<img src="15.bmp" alt="img">
-<img src="16.bmp" alt="img">
-<img src="17.bmp" alt="img">
-<img src="18.bmp" alt="img">
-<img src="19.bmp" alt="img">
-<img src="20.bmp" alt="img">
-<img src="21.bmp" alt="img">
-<img src="22.bmp" alt="img">
-<img src="23.bmp" alt="img"></p>
+      <h3 id="dynamically-memory-allocation-algorithm">Dynamically Memory Allocation Algorithm</h3>
+<ul>
+<li>
+<p>For large (&gt;= 512 bytes) requests, it is a pure best-fit allocator, with ties normally decided via FIFO (i.e. least recently used).</p>
+</li>
+<li>
+<p>For small (&lt;= 64 bytes by default) requests, it is a caching allocator, that maintains pools of quickly recycled chunks.</p>
+</li>
+<li>
+<p>In between, and for combinations of large and small requests, it does the best it can trying to meet both goals at once.</p>
+</li>
+<li>
+<p>For very large requests (&gt;= 128KB by default), it relies on system memory mapping facilities, if supported.</p>
+</li>
+</ul>
+<h3 id="vital-statistics">Vital Statistics</h3>
+<h4 id="size-of-ptr-and-size_t">size of ptr and size_t</h4>
+<p>4 bytes (32-bit program) or 8 bytes (64-bit program)</p>
+<h4 id="memory-alignment">Memory Alignment</h4>
+<p>2 * sizeof(size_t)</p>
+<p>i.e. 8 or 16 bytes</p>
+<h4 id="minimum-overhead">Minimum Overhead</h4>
+<p>4 or 8 bytes per allocated chunk</p>
+<p>Each malloced chunk has a hidden word of overhead holding size and status information.</p>
+<h3 id="chunk">Chunk</h3>
+<p>An allocated chunk looks like this:</p>
+<pre><code>    chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of previous chunk, if unallocated (P clear)  |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of chunk, in bytes                     |A|M|P|
+      mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             User data starts here...                          .
+            .                                                               .
+            .             (malloc_usable_size() bytes)                      .
+            .                                                               |
+nextchunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             (size of chunk, but used for application data)    |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of next chunk, in bytes                |A|0|1|
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</code></pre>
+<p>Free chunks are stored in circular doubly-linked lists, and look like this:</p>
+<pre><code>    chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of previous chunk, if unallocated (P clear)  |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    `head:' |             Size of chunk, in bytes                     |A|0|P|
+      mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Forward pointer to next chunk in list             |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Back pointer to previous chunk in list            |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Unused space (may be 0 bytes long)                .
+            .                                                               .
+            .                                                               |
+nextchunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    `foot:' |             Size of chunk, in bytes                           |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |             Size of next chunk, in bytes                |A|0|0|
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</code></pre>
+<h3 id="bin">Bin</h3>
+<p><strong>An array of bin headers for free chunks. Each bin is doubly linked.</strong></p>
+<p>Chunks in bins are kept in size order, with ties going to the approximately least recently used chunk.</p>
+<h3 id="fastbin">Fastbin</h3>
+<p><strong>An array of lists holding recently freed small chunks.</strong>  Fastbins are not doubly linked.  It is faster to single-link them, and since chunks are never removed from the middles of these lists, double linking is not necessary. Also, unlike regular bins, they are not even processed in FIFO order (they use faster LIFO) since ordering doesn&rsquo;t much matter in the transient contexts in which fastbins are normally used.</p>
+<p>Chunks in fastbins keep their inuse bit set, so they cannot be consolidated with other free chunks. malloc_consolidate releases all chunks in fastbins and consolidates them with other free chunks.</p>
 
     </div>
 
@@ -629,7 +678,7 @@
       
       
       <li>
-        <a href="https://twitter.com/intent/tweet?url=/post/minisearchengine/&amp;text=Mini%20Search%20Engine" target="_blank" rel="noopener" class="share-btn-twitter">
+        <a href="https://twitter.com/intent/tweet?url=/post/malloc/&amp;text=Reading%20Source%20Code%20of%20Malloc%20in%20the%20GNU%20C%20Library" target="_blank" rel="noopener" class="share-btn-twitter">
           <i class="fab fa-twitter"></i>
         </a>
       </li>
@@ -642,7 +691,7 @@
       
       
       <li>
-        <a href="https://www.facebook.com/sharer.php?u=/post/minisearchengine/&amp;t=Mini%20Search%20Engine" target="_blank" rel="noopener" class="share-btn-facebook">
+        <a href="https://www.facebook.com/sharer.php?u=/post/malloc/&amp;t=Reading%20Source%20Code%20of%20Malloc%20in%20the%20GNU%20C%20Library" target="_blank" rel="noopener" class="share-btn-facebook">
           <i class="fab fa-facebook"></i>
         </a>
       </li>
@@ -655,7 +704,7 @@
       
       
       <li>
-        <a href="mailto:?subject=Mini%20Search%20Engine&amp;body=/post/minisearchengine/" target="_blank" rel="noopener" class="share-btn-email">
+        <a href="mailto:?subject=Reading%20Source%20Code%20of%20Malloc%20in%20the%20GNU%20C%20Library&amp;body=/post/malloc/" target="_blank" rel="noopener" class="share-btn-email">
           <i class="fas fa-envelope"></i>
         </a>
       </li>
@@ -668,7 +717,7 @@
       
       
       <li>
-        <a href="https://www.linkedin.com/shareArticle?url=/post/minisearchengine/&amp;title=Mini%20Search%20Engine" target="_blank" rel="noopener" class="share-btn-linkedin">
+        <a href="https://www.linkedin.com/shareArticle?url=/post/malloc/&amp;title=Reading%20Source%20Code%20of%20Malloc%20in%20the%20GNU%20C%20Library" target="_blank" rel="noopener" class="share-btn-linkedin">
           <i class="fab fa-linkedin-in"></i>
         </a>
       </li>
@@ -681,7 +730,7 @@
       
       
       <li>
-        <a href="https://web.whatsapp.com/send?text=Mini%20Search%20Engine%20/post/minisearchengine/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+        <a href="https://web.whatsapp.com/send?text=Reading%20Source%20Code%20of%20Malloc%20in%20the%20GNU%20C%20Library%20/post/malloc/" target="_blank" rel="noopener" class="share-btn-whatsapp">
           <i class="fab fa-whatsapp"></i>
         </a>
       </li>
@@ -694,7 +743,7 @@
       
       
       <li>
-        <a href="https://service.weibo.com/share/share.php?url=/post/minisearchengine/&amp;title=Mini%20Search%20Engine" target="_blank" rel="noopener" class="share-btn-weibo">
+        <a href="https://service.weibo.com/share/share.php?url=/post/malloc/&amp;title=Reading%20Source%20Code%20of%20Malloc%20in%20the%20GNU%20C%20Library" target="_blank" rel="noopener" class="share-btn-weibo">
           <i class="fab fa-weibo"></i>
         </a>
       </li>
@@ -810,15 +859,8 @@
   
   
   <div class="post-nav-item">
-    <div class="meta-nav">Next</div>
-    <a href="/post/malloc/" rel="next">Reading Source Code of Malloc in the GNU C Library</a>
-  </div>
-  
-  
-  
-  <div class="post-nav-item">
     <div class="meta-nav">Previous</div>
-    <a href="/post/decaf_compiler/" rel="prev">Decaf Compiler</a>
+    <a href="/post/minisearchengine/" rel="prev">Mini Search Engine</a>
   </div>
   
 </div>
