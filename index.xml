@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Yilin&#39;s Blog</title>
+    <title>Yilin&#39;s Studio</title>
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    <description>Yilin&#39;s Blog</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2023 Yilin(Alex) Wang</copyright><lastBuildDate>Mon, 21 Nov 2022 00:00:00 +0000</lastBuildDate>
+    <description>Yilin&#39;s Studio</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© 2024 Yilin Wang</copyright><lastBuildDate>Mon, 21 Nov 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:square]</url>
-      <title>Yilin&#39;s Blog</title>
+      <title>Yilin&#39;s Studio</title>
       <link>/</link>
     </image>
     
@@ -676,81 +676,6 @@ pwd              Display the current working directory.
     </item>
     
     <item>
-      <title>LeetCode - Tree - Hard</title>
-      <link>/post/leetcode_tree/</link>
-      <pubDate>Wed, 08 Jul 2020 00:00:00 +0000</pubDate>
-      <guid>/post/leetcode_tree/</guid>
-      <description>&lt;h3 id=&#34;99-recover-binary-search-tree&#34;&gt;99. Recover Binary Search Tree&lt;/h3&gt;
-&lt;h4 id=&#34;problem&#34;&gt;Problem&lt;/h4&gt;
-&lt;p&gt;Two elements of a binary search tree (BST) are swapped by mistake.&lt;/p&gt;
-&lt;p&gt;Recover the tree without changing its structure.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-md&#34;&gt;Input: [3,1,4,null,null,2]
-
-  3
- / \
-1   4
-   /
-  2
-
-Output: [2,1,4,null,null,3]
-
-  2
- / \
-1   4
-   /
-  3
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id=&#34;algorithm&#34;&gt;Algorithm&lt;/h4&gt;
-&lt;p&gt;In case of binary search trees (BST), in-order traversal gives nodes in non-decreasing order. Since that exactly two elements of BST are swapped, exactly two elements in the array of in-order traversal is swapped mistakenly.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-md&#34;&gt;[1, 5, 3, 4, 2, 6]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We compare each pair of elements.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;In the first abnormal pair of elements, &lt;strong&gt;[5, 3]&lt;/strong&gt;, the previous element is the first swapped element;&lt;/li&gt;
-&lt;li&gt;In the last abnormal pair of elements, &lt;strong&gt;[4, 2]&lt;/strong&gt;,  the latter element is the second swapped element.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;space-complexity&#34;&gt;Space Complexity&lt;/h4&gt;
-&lt;p&gt;This problem can have a constant space solution.&lt;/p&gt;
-&lt;p&gt;The process of in-order traversal does not need space and only the previous TreeNode is recorded.&lt;/p&gt;
-&lt;h4 id=&#34;code&#34;&gt;Code&lt;/h4&gt;
-&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class Solution {
-public:
-    TreeNode* first = NULL;
-    TreeNode* second = NULL;
-    TreeNode* pre = new TreeNode(INT_MIN);
-    
-    void InOrder(TreeNode* root){
-        if(root == NULL){
-            return;
-        }
-        
-        InOrder(root -&amp;gt; left);
-        
-        if(first == NULL &amp;amp;&amp;amp; root -&amp;gt; val &amp;lt; pre -&amp;gt; val){
-            first = pre;
-        }
-        if(first != NULL &amp;amp;&amp;amp; root -&amp;gt; val &amp;lt; pre -&amp;gt; val){
-            second = root;
-        }
-        pre = root;
-        
-        InOrder(root -&amp;gt; right);
-    }
-    
-    void recoverTree(TreeNode* root) {
-        InOrder(root);
-        swap(first -&amp;gt; val, second -&amp;gt; val);
-    }
-    
-};
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;did-you-find-this-page-helpful-consider-sharing-it-&#34;&gt;Did you find this page helpful? Consider sharing it 🙌&lt;/h3&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Color Scheme &#39;Violet&#39; for my Home Page</title>
       <link>/post/color_scheme/</link>
       <pubDate>Wed, 12 Feb 2020 00:00:00 +0000</pubDate>
@@ -909,7 +834,6 @@ public:
 &lt;p&gt;
 &lt;a href=&#34;https://medium.com/hackernoon/manachers-algorithm-explained-longest-palindromic-substring-22cb27a5e96f&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Manacher’s Algorithm Explained— Longest Palindromic Substring&lt;/a&gt;
 &lt;/p&gt;
-&lt;h3 id=&#34;did-you-find-this-page-helpful-consider-sharing-it-&#34;&gt;Did you find this page helpful? Consider sharing it 🙌&lt;/h3&gt;
 </description>
     </item>
     
